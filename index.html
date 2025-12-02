@@ -12,7 +12,7 @@
             --envelope-color: #d7c4a1; 
             --envelope-shadow: #c0ad8d;
             --paper-color: #fffdf7;    /* Màu giấy kem sữa */
-            --text-color: #333;        /* Màu chữ đậm hơn xíu cho dễ đọc */
+            --text-color: #333;        /* Màu chữ đậm rõ ràng */
         }
 
         body {
@@ -29,7 +29,7 @@
         /* Lớp phủ mờ nền */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); /* Tối hơn chút để nổi bật giấy */
+            background: rgba(0,0,0,0.7);
             opacity: 0; visibility: hidden;
             transition: all 0.6s ease;
             z-index: 90;
@@ -75,7 +75,7 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
-        /* --- TỜ GIẤY NỘI DUNG (Đã chỉnh sửa) --- */
+        /* --- TỜ GIẤY NỘI DUNG (Pop-up bự, không viền) --- */
         .letter {
             position: absolute;
             top: 50%; left: 50%;
@@ -83,20 +83,18 @@
             width: 85%; height: 85%;
             background-color: var(--paper-color);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 6px; /* Bo góc nhẹ */
+            border-radius: 6px;
             opacity: 0; z-index: 1;
             transition: all 0.8s cubic-bezier(0.34, 1.25, 0.64, 1);
             overflow: hidden;
             display: flex; flex-direction: column;
         }
 
-        /* Đã xóa phần .letter::before (viền vàng) */
-
         /* Nội dung chữ */
         .paper-content {
             position: relative; z-index: 1;
             width: 100%; height: 100%;
-            padding: 30px; /* Padding vừa đủ */
+            padding: 30px; 
             box-sizing: border-box;
             overflow-y: auto;
             scrollbar-width: none;
@@ -114,11 +112,11 @@
 
         /* Đoạn văn */
         .paper-content p {
-            font-size: 20px; /* Chữ to rõ */
+            font-size: 20px;
             color: var(--text-color);
             line-height: 1.6;
             margin-bottom: 20px;
-            text-align: justify; /* Căn đều */
+            text-align: justify; /* Căn đều 2 bên */
         }
         
         /* Footer */
@@ -131,20 +129,20 @@
             color: #8d6e63;
         }
 
-        /* --- HIỆU ỨNG MỞ (Đã chỉnh kích thước bự hơn) --- */
+        /* --- HIỆU ỨNG MỞ --- */
         .wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
         
         .wrapper.open .letter {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(1) rotate(0deg);
             
-            /* KÍCH THƯỚC MỚI: BỰ HƠN */
-            width: 95vw; /* Chiếm 95% bề ngang màn hình điện thoại */
-            max-width: 750px; /* Rộng tối đa 750px trên máy tính */
-            height: 90vh; /* Chiếm 90% chiều cao màn hình */
+            /* Kích thước lớn gần hết màn hình */
+            width: 95vw; 
+            max-width: 750px; 
+            height: 90vh; 
             
             z-index: 1000; opacity: 1;
-            box-shadow: 0 30px 100px rgba(0,0,0,0.5); /* Bóng đổ đậm để tách biệt nền */
+            box-shadow: 0 30px 100px rgba(0,0,0,0.5);
         }
 
         /* Nút đóng */
@@ -166,14 +164,9 @@
         .close-btn:hover { background-color: #6d4c41; transform: scale(1.05); }
         .wrapper.open .close-btn { opacity: 1; transition-delay: 0.6s; }
 
-        /* Responsive cho điện thoại để padding không quá lớn */
         @media (max-width: 600px) {
-            .paper-content {
-                padding: 20px 25px; /* Giảm padding trên điện thoại để chữ có nhiều chỗ hơn */
-            }
-            .paper-content p {
-                font-size: 19px; /* Chữ vừa vặn màn hình nhỏ */
-            }
+            .paper-content { padding: 20px 25px; }
+            .paper-content p { font-size: 19px; }
         }
 
     </style>
@@ -191,47 +184,47 @@
                 <h1>Gửi Bé Heo,</h1>
                 
                 <p>
-                    Ú đã phải suy nghĩ rất nhiều, rất rất nhiều, những đêm dài mất ngủ thì ú mới dám đưa ra quyết định này và nói lên những suy nghĩ này của mình. Ú không đủ mạnh mẽ để mà đối mặt nói với Bé Heo những điều này, nên ú chỉ có thể nói qua đây thôi.
+                    ú đã phải suy nghĩ rất nhiều, rất rất nhiều, những đêm dài mất ngủ thì ú mới dám đưa ra quyết định này và nói lên những suy nghĩ này của mình, ú không đủ mạnh mẽ để mà đối mặt nói với Bé Heo những điều này, nên ú chỉ có thể nói qua đây thoi.
                 </p>
                 
                 <p>
-                    Nên khi mà Bé Heo nhận được gói hàng này và đọc được những dòng chữ này ú viết thì ú nghĩ rằng, chắc đây sẽ là lần cuối Bé Heo được nhận quà của ú, và cũng như đọc được những dòng chữ này của ú viết cho Bé Heo. Và ú nghĩ rằng ú và Bé Heo nên dừng lại và kết thúc tại đây thôi…
+                    nên khi mà Bé Heo nhận được gói hàng này và đọc được những dòng chữ này ú viết thì ú nghĩ rằng, chắc đây sẽ là lần cuối Bé Heo được nhận quà của ú và cũng như đọc được những dòng chữ này của ú viết cho Bé Heo, và ú nghĩ rằng ú và Bé Heo nên dừng lại và kết thúc tại đây thôi…
                 </p>
 
                 <p>
-                    Tại vì ú nghĩ rằng nếu mà hai ta tiếp tục thì mối quan hệ này cũng không tiến triển được nhiều và đi được đến đâu cả.
+                    tại vì ú nghĩ rằng nếu mà hai ta tiếp tục thì mối quan hệ này cũng không tiến triển được nhiều và chẳng đi được đến đâu cả.
                 </p>
 
                 <p>
-                    Vì ú thấy rằng một năm ú với Bé Heo không được tiếp xúc với nhau nhiều, cũng như là gặp gỡ và gần gũi với nhau bao nhiêu cả. Nên ú thấy rằng ít nhiều sau một quãng thời gian dài nữa như vậy thì dần dần tình cảm này của ú và Bé Heo cũng không còn tiến triển được nhiều nữa và đi được đến đâu cả.
+                    vì ú thấy rằng một năm ú với Bé Heo không được tiếp xúc với nhau nhiều, cũng như là gặp gỡ và gần gũi với nhau bao nhiêu cả, nên ú thấy rằng ít nhiều sau một quãng thời gian dài nữa như vậy thì dần dần thì tình cảm này của ú và Bé Heo cũng không còn tiến triển được nhiều nữa và cũng chẳng đi được đến đâu cả.
                 </p>
 
                 <p>
-                    Và ú thấy rằng ú không ở gần được với Bé Heo nhiều, rồi cũng không quá dư dả nhiều để mà lo cho Bé Heo hay mua được những thứ mà Bé Heo thích và Bé Heo muốn. Cũng như ú thấy rằng không có ú thì cũng sẽ có người khác tốt hơn ú, ở gần bên Bé Heo và lo được cho Bé Heo, và đem đến nhiều điều tốt hơn ú dành tặng đến cho Bé Heo.
+                    và ú thấy rằng ú không ở gần được với Bé Heo nhiều, rồi cũng không quá dư dả nhiều để mà lo cho Bé Heo hay mua được những thứ mà Bé Heo thích và Bé Heo muốn. cũng như ú thầy rằng không có ú thì cũng sẽ có người khác tốt hơn ú, ở gần bên Bé Heo và lo được cho Bé Heo, và đem đến nhiều điều tốt hơn ú dành tặng đến cho Bé Heo.
                 </p>
 
                 <p>
-                    Ú đã từng nghĩ ú sẽ làm được, ú sẽ đủ mạnh mẽ, đủ sức lực để mà có thể bù đắp và cũng như đem đến những thứ tốt về cho Bé Heo. Nhưng mà thực tế thì ú đã không còn đủ mạnh mẽ nữa rồi…, ú giờ đây đến cả bản thân mình còn lo chưa xong nữa thì sao mà lo được cho Bé Heo.
+                    ú đã từng nghĩ ú sẽ làm được, ú sẽ đủ mạnh mẽ, đủ sức lực để mà có thể bù đắp và cũng như đem đến những thứ tốt về cho Bé Heo. nhưng mà thực tế thì ú đã không còn đủ mạnh mẽ nữa rồi…, ú giờ đây đến cả bản thân mình còn lo chưa xong nữa thì sao mà lo được cho Bé Heo.
                 </p>
 
                 <p>
-                    Ú chọn dừng lại không phải vì ú đã hết yêu Bé Heo, mà vì ú không muốn Bé Heo cứ phải chờ đợi ú mãi như vậy, không biết tới khi nào thì ú mới có thể đem tới tất cả điều tốt đẹp mà ú muốn đến cho Bé Heo nữa. Nên ú nghĩ rằng đây sẽ là điều tốt nhất mà ú dành đến cho Bé Heo.
+                    ú chọn dừng lại không phải vì ú đã hết yêu Bé Heo mà vì ú không muốn Bé Heo cứ phải chờ đợi ú mãi, và mọi chuyện cứ tiếp tục và tiếp diễn ngày qua ngày như vậy mà chẳng có gì tiến triển, không biết tới khi nào thì ú mới có thể đem tới tất cả điều tốt đẹp mà ú muốn đến cho Bé Heo nữa. nên ú nghĩ rằng đây sẽ là điều mà tốt nhất ú dành đến cho Bé Heo.
                 </p>
 
                 <p>
-                    Ú cảm ơn Bé Heo rất nhiều vì đã đến và bước vào trong cuộc đời tẻ nhạt của ú mập này, và đem đến cho ú những cảm xúc đẹp nhất của thời thanh xuân. Khoảng thời gian qua là khoảng thời gian đẹp nhất và hạnh phúc nhất đối với ú. Dù không thể đi cùng nhau đến cuối đường, thì ú vẫn luôn mong Bé Heo sẽ hạnh phúc trên con đường phía trước Bé Heo đã chọn, và sẽ gặp được người ở gần và chăm sóc cho Bé Heo mỗi ngày.
+                    ú cảm ơn Bé Heo rất nhiều vì đã đến và bước vào trong cuộc đời tẻ nhạt của ú mập này, và đem đến cho ú những cảm xúc đẹp nhất của thời thanh xuân. khoảng thời gian qua là khoảng thời gian đẹp nhất và hạnh phúc nhất đối với ú. Dù không thể đi cùng nhau đến cuối đường, thì ú vẫn luôn mong Bé Heo sẽ hạnh phúc trên con đường phía trước Bé Heo đã chọn và sẽ gặp được người ở gần và chăm sóc cho Bé Heo mỗi ngày.
                 </p>
 
                 <p>
-                    Cảm ơn Bé Heo vì đã là một phần kỷ niệm đẹp trong cuộc đời của ú mà khó có thể nào quên được. Cũng như rằng ú xin gửi lại Bé Heo tất cả những món quà mà Bé Heo đã dành tặng cho ú, những món quà đó sẽ chẳng có ý nghĩa gì với ú khi mà chẳng còn Bé Heo bên cạnh nữa. Nếu Bé Heo có ý gửi lại những món đồ đó cho ú thì không cần gửi đâu nha, ú đổi chỗ mới rồi không phải địa chỉ chỗ ở cũ nữa đâu.
+                    cảm ơn Bé Heo vì đã là một phần kỷ niệm đẹp trong cuộc đời của ú, mà khó có thể nào quên được. cũng như rằng ú xin gửi lại Bé Heo tất cả những món quà mà Bé Heo đã dành tặng cho ú, những món quà đó sẽ chẳng có ý nghĩa gì với ú khi mà chẳng còn Bé Heo bên cạnh nữa. Nếu mà Bé Heo có ý định gửi lại những món đồ đó cho ú thì không cần gửi đâu, ú đổi chỗ mới rồi không phải địa chỉ chỗ ở cũ nữa đâu.
                 </p>
 
                 <p>
-                    Cảm ơn Bé Heo vì tất cả. ❤️
+                    cảm ơn Bé Heo vì tất cả. ❤️
                 </p>
 
                 <div class="footer">
-                    Xin tạm biệt Bé Heo.
+                    xin tạm biệt Bé Heo.
                 </div>
 
                 <button class="close-btn" onclick="closeLetter(event)">Đóng Thư</button>
