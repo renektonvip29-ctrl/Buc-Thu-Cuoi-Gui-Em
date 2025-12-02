@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Gửi Bạn</title>
+    <title>Gửi Bé Heo</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
         /* --- CẤU HÌNH MÀU SẮC --- */
         :root {
-            --bg-color: #f3f4f6;       /* Nền trang web xám nhạt hiện đại */
-            --envelope-color: #d7c4a1; /* Màu bao thư Kraft */
+            --bg-color: #f3f4f6;       
+            --envelope-color: #d7c4a1; 
             --envelope-shadow: #c0ad8d;
-            --paper-color: #fffdf7;    /* Màu giấy kem sữa (Ivory) */
-            --text-color: #4a4a4a;     /* Màu chữ xám đen dịu mắt */
-            --border-color: #d4af37;   /* Màu viền vàng kim nhẹ (Gold) */
+            --paper-color: #fffdf7;    /* Màu giấy kem sữa */
+            --text-color: #4a4a4a;     
+            --border-color: #d4af37;   /* Viền vàng kim */
         }
 
         body {
@@ -27,7 +27,7 @@
             overflow: hidden;
         }
 
-        /* Lớp phủ mờ nền khi mở thư */
+        /* Lớp phủ mờ nền */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6);
@@ -47,7 +47,7 @@
         }
         .wrapper:hover { transform: translateY(-5px); }
 
-        /* --- CẤU TẠO BAO THƯ (Tối giản) --- */
+        /* --- CẤU TẠO BAO THƯ --- */
         .envelope {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--envelope-color);
@@ -76,19 +76,14 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
-        /* --- TỜ GIẤY MỸ THUẬT (ART PAPER) --- */
+        /* --- TỜ GIẤY NỘI DUNG --- */
         .letter {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.5) rotate(-3deg);
             width: 85%; height: 85%;
-            
-            /* Nền giấy màu kem, không dòng kẻ */
             background-color: var(--paper-color);
-            
-            /* Hiệu ứng giấy dày: Bóng đổ mềm */
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            
             border-radius: 4px;
             opacity: 0; z-index: 1;
             transition: all 0.8s cubic-bezier(0.34, 1.25, 0.64, 1);
@@ -96,43 +91,51 @@
             display: flex; flex-direction: column;
         }
 
-        /* VIỀN TRANG TRÍ BÊN TRONG (Decorative Border) */
-        /* Tạo cảm giác sang trọng như thiệp mời */
+        /* Viền trang trí bên trong */
         .letter::before {
             content: '';
             position: absolute;
-            top: 15px; left: 15px; right: 15px; bottom: 15px; /* Cách lề 15px */
-            border: 1px solid var(--border-color); /* Viền mảnh màu vàng kim */
-            pointer-events: none; /* Để vẫn bôi đen được chữ bên dưới */
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            border: 1px double var(--border-color);
+            pointer-events: none;
             z-index: 0;
         }
 
-        /* Nội dung bên trong */
+        /* Nội dung chữ */
         .paper-content {
-            position: relative; z-index: 1; /* Nổi lên trên viền trang trí */
+            position: relative; z-index: 1;
             width: 100%; height: 100%;
-            padding: 40px 35px; /* Padding lớn để chữ nằm lọt lòng viền */
+            padding: 30px 40px; /* Padding rộng rãi */
             box-sizing: border-box;
             overflow-y: auto;
             scrollbar-width: none;
-            text-align: center; /* Canh giữa cho giống thiệp */
         }
         .paper-content::-webkit-scrollbar { display: none; }
 
+        /* Tiêu đề */
         .paper-content h1 {
             font-family: 'Dancing Script', cursive;
             color: #8d6e63;
-            font-size: 36px;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.05);
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
+        /* Đoạn văn */
         .paper-content p {
-            font-size: 20px;
+            font-size: 19px;
             color: var(--text-color);
-            line-height: 1.8; /* Khoảng cách dòng thoáng */
-            margin-bottom: 20px;
-            white-space: pre-line; /* Giữ định dạng xuống dòng của người viết */
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify; /* Căn đều 2 bên cho trang trọng */
+        }
+        
+        /* Chữ ký hoặc lời kết */
+        .paper-content .footer {
+            text-align: right;
+            margin-top: 30px;
+            font-weight: bold;
+            font-style: italic;
         }
 
         /* --- HIỆU ỨNG MỞ --- */
@@ -141,16 +144,16 @@
         .wrapper.open .letter {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(1) rotate(0deg);
-            width: 90vw; max-width: 500px;
-            height: 75vh; /* Chiều cao vừa phải cho giống tấm thiệp */
+            width: 90vw; max-width: 600px; /* Rộng hơn chút để chứa nhiều chữ */
+            height: 80vh; 
             z-index: 1000; opacity: 1;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3); /* Bóng đổ lớn nổi bật */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
 
         /* Nút đóng */
         .close-btn {
-            display: inline-block;
-            margin-top: 20px;
+            display: block;
+            margin: 30px auto 10px auto;
             padding: 10px 35px;
             background-color: #8d6e63;
             color: white;
@@ -161,10 +164,10 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(141, 110, 99, 0.4);
             transition: all 0.3s;
-            opacity: 0; transform: translateY(20px);
+            opacity: 0;
         }
         .close-btn:hover { background-color: #6d4c41; transform: translateY(-2px); }
-        .wrapper.open .close-btn { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+        .wrapper.open .close-btn { opacity: 1; transition-delay: 0.6s; }
 
     </style>
 </head>
@@ -178,17 +181,51 @@
 
         <div class="letter">
             <div class="paper-content">
-                <h1>Thư Gửi Bạn Hiền</h1>
+                <h1>Gửi Bé Heo,</h1>
                 
                 <p>
-                    Chào bạn,
-                    
-                    Hôm nay mình chọn một tờ giấy thật đẹp, không dòng kẻ, để viết những lời này gửi đến bạn.
-                    
-                    Mong rằng những ngày sắp tới của bạn sẽ thật nhẹ nhàng, bình yên và lấp lánh niềm vui.
-                    
-                    Đừng quên mỉm cười nhé!
+                    Ú đã phải suy nghĩ rất nhiều, rất rất nhiều, những đêm dài mất ngủ thì ú mới dám đưa ra quyết định này và nói lên những suy nghĩ này của mình. Ú không đủ mạnh mẽ để mà đối mặt nói với Bé Heo những điều này, nên ú chỉ có thể nói qua đây thôi.
                 </p>
+                
+                <p>
+                    Nên khi mà Bé Heo nhận được gói hàng này và đọc được những dòng chữ này ú viết thì ú nghĩ rằng, chắc đây sẽ là lần cuối Bé Heo được nhận quà của ú, và cũng như đọc được những dòng chữ này của ú viết cho Bé Heo. Và ú nghĩ rằng ú và Bé Heo nên dừng lại và kết thúc tại đây thôi…
+                </p>
+
+                <p>
+                    Tại vì ú nghĩ rằng nếu mà hai ta tiếp tục thì mối quan hệ này cũng không tiến triển được nhiều và đi được đến đâu cả.
+                </p>
+
+                <p>
+                    Vì ú thấy rằng một năm ú với Bé Heo không được tiếp xúc với nhau nhiều, cũng như là gặp gỡ và gần gũi với nhau bao nhiêu cả. Nên ú thấy rằng ít nhiều sau một quãng thời gian dài nữa như vậy thì dần dần tình cảm này của ú và Bé Heo cũng không còn tiến triển được nhiều nữa.
+                </p>
+
+                <p>
+                    Và ú thấy rằng ú không ở gần được với Bé Heo nhiều, rồi cũng không quá dư dả nhiều để mà lo cho Bé Heo hay mua được những thứ mà Bé Heo thích và Bé Heo muốn. Cũng như ú thấy rằng không có ú thì cũng sẽ có người khác tốt hơn ú, ở gần bên Bé Heo và lo được cho Bé Heo, và đem đến nhiều điều tốt hơn ú dành tặng đến cho Bé Heo.
+                </p>
+
+                <p>
+                    Ú đã từng nghĩ ú sẽ làm được, ú sẽ đủ mạnh mẽ, đủ sức lực để mà có thể bù đắp và cũng như đem đến những thứ tốt về cho Bé Heo. Nhưng mà thực tế thì ú đã không còn đủ mạnh mẽ nữa rồi…, ú giờ đây đến cả bản thân mình còn lo chưa xong nữa thì sao mà lo được cho Bé Heo.
+                </p>
+
+                <p>
+                    Ú chọn dừng lại không phải vì ú đã hết yêu Bé Heo, mà vì ú không muốn Bé Heo cứ phải chờ đợi ú mãi như vậy, không biết tới khi nào thì ú mới có thể đem tới tất cả điều tốt đẹp mà ú muốn đến cho Bé Heo nữa. Nên ú nghĩ rằng đây sẽ là điều tốt nhất mà ú dành đến cho Bé Heo.
+                </p>
+
+                <p>
+                    Ú cảm ơn Bé Heo rất nhiều vì đã đến và bước vào trong cuộc đời tẻ nhạt của ú mập này, và đem đến cho ú những cảm xúc đẹp nhất của thời thanh xuân. Khoảng thời gian qua là khoảng thời gian đẹp nhất và hạnh phúc nhất đối với ú. Dù không thể đi cùng nhau đến cuối đường, thì ú vẫn luôn mong Bé Heo sẽ hạnh phúc trên con đường phía trước Bé Heo đã chọn, và sẽ gặp được người ở gần và chăm sóc cho Bé Heo mỗi ngày.
+                </p>
+
+                <p>
+                    Cảm ơn Bé Heo vì đã là một phần kỷ niệm đẹp trong cuộc đời của ú mà khó có thể nào quên được. Cũng như rằng ú xin gửi lại Bé Heo tất cả những món quà mà Bé Heo đã dành tặng cho ú, những món quà đó sẽ chẳng có ý nghĩa gì với ú khi mà chẳng còn Bé Heo bên cạnh nữa. Nếu Bé Heo có ý gửi lại những món đồ đó cho ú thì không cần gửi đâu nha, ú đổi chỗ mới rồi không phải địa chỉ chỗ ở cũ nữa đâu.
+                </p>
+
+                <p>
+                    Cảm ơn Bé Heo vì tất cả. ❤️
+                </p>
+
+                <div class="footer">
+                    Xin tạm biệt Bé Heo.
+                </div>
 
                 <button class="close-btn" onclick="closeLetter(event)">Đóng Thư</button>
             </div>
