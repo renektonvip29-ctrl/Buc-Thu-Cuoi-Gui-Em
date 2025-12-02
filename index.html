@@ -3,200 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư Gửi Bạn</title>
+    <title>Thư Gửi Người Thương</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* 1. Cấu hình chung */
+        /* --- 1. Cài đặt chung --- */
         body {
-            background-color: #e3f2fd; /* Màu nền xanh nhạt dễ chịu */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden; /* Ngăn cuộn trang chính */
         }
 
-        /* 2. Khung bao bọc (Wrapper) */
+        /* Lớp nền mờ khi mở thư */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); /* Màu đen mờ */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s;
+            z-index: 99; /* Nằm dưới lá thư nhưng trên bao thư */
+        }
+        
+        body.message-open .overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- 2. Khung bao thư --- */
         .wrapper {
             position: relative;
-            width: 300px; /* Chiều rộng máy tính */
+            width: 300px;
             height: 200px;
             cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 100;
         }
 
-        /* 3. Vẽ Bao Thư Màu Trắng (CSS thuần) */
+        /* Hiệu ứng rung nhẹ khi chưa mở */
+        .wrapper:not(.open):hover {
+            animation: shake 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(1deg); }
+            75% { transform: rotate(-1deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* --- 3. Cấu tạo bao thư --- */
         .envelope {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #fff; /* Màu trắng của bao thư */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-radius: 5px;
+            bottom: 0; left: 0; width: 100%; height: 100%;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             z-index: 2;
-            overflow: hidden; /* Giấu phần giấy chưa trồi lên */
         }
 
-        /* Tạo nắp phong bì (tam giác dưới) */
+        /* Tam giác đáy */
         .envelope::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 150px 120px 150px; /* Tạo hình tam giác */
-            border-color: transparent transparent #f7f7f7 transparent; /* Màu trắng xám nhẹ */
+            content: ''; position: absolute; bottom: 0; left: 0;
+            border-style: solid; border-width: 0 150px 120px 150px;
+            border-color: transparent transparent #f5f5f5 transparent;
             z-index: 4;
         }
 
-        /* Tạo 2 cánh bên phong bì */
+        /* Hai cánh bên */
         .envelope::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 100px 150px 100px 150px;
-            border-color: transparent #ececec transparent #ececec; /* Màu xám tối hơn chút để tạo khối */
+            content: ''; position: absolute; top: 0; left: 0;
+            border-style: solid; border-width: 100px 150px 100px 150px;
+            border-color: transparent #eeeeee transparent #eeeeee;
             z-index: 3;
         }
 
-        /* Nắp trên của phong bì (Phần sẽ mở ra) */
+        /* Nắp thư */
         .flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 110px 150px 0 150px;
-            border-color: #ffffff transparent transparent transparent; /* Màu trắng */
+            position: absolute; top: 0; left: 0;
+            border-style: solid; border-width: 110px 150px 0 150px;
+            border-color: #ffffff transparent transparent transparent;
             z-index: 5;
             transform-origin: top;
-            transition: transform 0.6s ease-in-out, z-index 0.6s;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1)); /* Đổ bóng nhẹ cho nắp */
+            transition: transform 0.6s 0.2s, z-index 0.4s;
         }
 
-        /* 4. Hình chiếc lá trang trí (Dùng Emoji phóng to để không cần ảnh) */
-        .leaf-decor {
-            position: absolute;
-            bottom: 10px;
-            left: -30px;
-            font-size: 80px;
-            z-index: 10; /* Nằm trên cùng */
-            transform: rotate(-45deg);
-            opacity: 0.9;
-            pointer-events: none; /* Để bấm xuyên qua lá được */
+        /* Tem thư */
+        .seal {
+            position: absolute; bottom: 100%; left: 50%;
+            transform: translate(-50%, 60px);
+            width: 36px; height: 36px;
+            background: #d32f2f;
+            border-radius: 50%;
+            color: white; font-size: 18px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 6;
         }
-        
-        .leaf-decor-2 {
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 60px;
-            z-index: 10;
-            transform: rotate(45deg);
-            opacity: 0.8;
+
+        /* Chiếc lá SVG */
+        .vine {
+            position: absolute; bottom: -15px; left: -20px;
+            width: 140px; z-index: 10;
             pointer-events: none;
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
         }
 
-        /* 5. Tờ giấy bên trong */
+        /* --- 4. Tờ giấy (Letter) - QUAN TRỌNG --- */
         .letter {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            height: 90%;
-            background-color: #fffdf0; /* Màu giấy hơi ngả vàng */
+            /* Ban đầu nằm ẩn trong bao thư */
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.4);
+            width: 90%; height: 90%;
+            background: #fffcf5;
             padding: 20px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
             border-radius: 5px;
-            transition: all 0.8s ease-in-out;
-            z-index: 1; /* Nằm dưới bao thư lúc đầu */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-size: 16px;
+            opacity: 0;
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            
+            /* Giao diện giấy */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Khi thư đã mở -> Phóng to Full màn hình */
+        .wrapper.open .letter {
+            position: fixed; /* Chuyển sang chế độ cố định màn hình */
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(1); /* Căn giữa màn hình */
+            
+            /* Kích thước lớn */
+            width: 90vw; /* 90% chiều rộng màn hình */
+            max-width: 600px; /* Không quá rộng trên PC */
+            height: auto;
+            max-height: 85vh; /* 85% chiều cao màn hình */
+            
+            z-index: 1000; /* Nằm trên cùng */
+            opacity: 1;
+            padding: 30px;
+            overflow-y: auto; /* Cho phép cuộn nếu thư dài */
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            
+            /* Dòng kẻ giấy */
+            background-image: repeating-linear-gradient(#fffcf5, #fffcf5 29px, #ccc 30px);
+            line-height: 30px;
         }
 
-        /* --- HIỆU ỨNG MỞ THƯ --- */
+        /* Nội dung chữ trong thư */
+        .text-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .text-content h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #c62828;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .text-content p {
+            font-size: 18px; /* Chữ to dễ đọc */
+            color: #444;
+            margin-bottom: 20px;
+            white-space: pre-line; /* Giữ nguyên xuống dòng */
+        }
+
+        /* Nút đóng */
+        .close-btn {
+            background: #c62828;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+            margin-top: 20px;
+            display: none; /* Ẩn khi chưa mở */
+        }
         
-        /* Bước 1: Mở nắp */
+        .close-btn:hover { background: #b71c1c; }
+        
+        .wrapper.open .close-btn { display: inline-block; }
+
+        /* --- 5. Hiệu ứng mở nắp --- */
         .wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Đưa nắp xuống dưới giấy */
+            z-index: 1;
+            transition-delay: 0s;
         }
+        
+        .wrapper.open .seal { opacity: 0; transition: 0.2s; }
 
-        /* Bước 2: Giấy trồi lên */
-        .wrapper.open .letter {
-            /* Trồi lên cao hơn bao thư và nằm đè lên bao thư */
-            bottom: 120px; 
-            z-index: 6; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        /* --- RESPONSIVE (Cho điện thoại) --- */
-        @media (max-width: 600px) {
-            .wrapper {
-                width: 260px; /* Thu nhỏ bao thư */
-                height: 170px;
-            }
-            .envelope::before {
-                border-width: 0 130px 100px 130px;
-            }
-            .envelope::after {
-                border-width: 85px 130px 85px 130px;
-            }
-            .flap {
-                border-width: 95px 130px 0 130px;
-            }
-            .leaf-decor {
-                font-size: 60px;
-                left: -20px;
-            }
-            .letter h3 {
-                font-size: 16px;
-                margin-top: 0;
-            }
-            .letter p {
-                font-size: 13px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper" onclick="openLetter()">
-        <div class="leaf-decor">🌿</div>
-        <div class="leaf-decor-2">🍃</div>
+    <div class="overlay" onclick="closeLetter(event)"></div>
+
+    <div class="wrapper" id="envelopeWrapper" onclick="openLetter()">
+        <svg class="vine" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,100 Q40,50 10,10" stroke="#795548" stroke-width="2"/>
+            <path d="M10,25 Q30,20 40,30 Q30,40 10,25" fill="#81c784"/>
+            <path d="M25,55 Q45,50 50,60 Q45,70 25,55" fill="#66bb6a"/>
+            <path d="M10,80 Q35,75 40,85 Q35,95 10,80" fill="#4caf50"/>
+        </svg>
 
         <div class="envelope"></div>
-        <div class="flap"></div>
         
+        <div class="flap">
+            <div class="seal">❤</div>
+        </div>
+
         <div class="letter">
-            <h3>Gửi Bạn,</h3>
-            <p>
-                Đây là một bức thư đơn giản.<br>
-                Chúc bạn một ngày thật nhẹ nhàng và bình yên như chiếc lá này nhé!
-                <br><br>
-                ❤️
-            </p>
+            <div class="text-content">
+                <h2>Gửi người đặc biệt,</h2>
+                <p>
+                    Chào bạn, đây là bức thư bí mật của chúng ta.
+                    
+                    Hôm nay bầu trời thật đẹp, và mình hy vọng nụ cười của bạn cũng rạng rỡ như thế. 
+                    
+                    Mong mọi điều may mắn và bình an sẽ đến với bạn. Hãy luôn giữ vững niềm tin và bước tiếp nhé!
+                    <br>
+                    <strong>Trân trọng.</strong>
+                </p>
+                <button class="close-btn" onclick="closeLetter(event)">Đóng lại</button>
+            </div>
         </div>
     </div>
 
     <script>
         function openLetter() {
-            const wrapper = document.querySelector('.wrapper');
-            wrapper.classList.toggle('open');
+            const wrapper = document.getElementById('envelopeWrapper');
+            const body = document.body;
+            
+            // Thêm class để mở thư
+            wrapper.classList.add('open');
+            body.classList.add('message-open');
+        }
+
+        function closeLetter(event) {
+            // Ngăn sự kiện nổi bọt (để không kích hoạt openLetter khi bấm nút đóng)
+            event.stopPropagation();
+            
+            const wrapper = document.getElementById('envelopeWrapper');
+            const body = document.body;
+            
+            // Xóa class để đóng thư
+            wrapper.classList.remove('open');
+            body.classList.remove('message-open');
         }
     </script>
 
