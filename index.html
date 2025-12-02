@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bức Thư Bí Mật</title>
+    <title>Bức Thư Bí Mật Của Bạn</title>
     <style>
-        /* 1. Cài đặt cơ bản cho trang web */
+        /* 1. Cài đặt cơ bản cho trang web và responsive */
         body {
-            background-color: #fce4ec; /* Màu nền hồng nhạt */
+            background-color: #f0f2f5; /* Màu nền sáng sủa */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: 'Arial', sans-serif;
-            overflow: hidden; /* Ẩn thanh cuộn khi thư mở ra */
+            overflow: hidden;
+            padding: 20px; /* Thêm padding cho mobile */
+            box-sizing: border-box;
         }
 
         /* 2. Khung bao bọc lá thư */
@@ -23,126 +25,91 @@
             width: 300px;
             height: 200px;
             cursor: pointer;
+            perspective: 1000px; /* Tạo độ sâu cho hiệu ứng lật 3D */
         }
 
-        /* 3. Phần thân bì thư (Mặt sau và mặt trước dưới) */
-        .envelope {
-            position: relative;
+        /* 3. Hình ảnh bì thư và lá cây */
+        .envelope-image {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: #d32f2f; /* Màu đỏ đậm */
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 1;
+            /* Sử dụng hình ảnh bạn cung cấp */
+            background-image: url('image_0.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2; /* Nằm trên lá thư */
         }
         
-        /* Tạo hình tam giác cho phần túi thư (bottom flap) */
-        .envelope::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 150px 100px 150px; /* Tạo hình tam giác */
-            border-color: transparent transparent #e53935 transparent; /* Màu đỏ sáng hơn chút */
-            z-index: 3;
-            border-radius: 0 0 10px 10px;
-        }
-        
-        /* Tạo hai cánh bên của bì thư */
-        .envelope::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 100px 150px 100px 150px;
-            border-color: transparent #c62828 transparent #c62828; /* Màu đỏ tối 2 bên */
-            z-index: 2;
-            border-radius: 10px;
-        }
-
-        /* 4. Nắp thư (Top flap) */
-        .flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 110px 150px 0 150px;
-            border-color: #b71c1c transparent transparent transparent; /* Màu đỏ tối nhất */
-            z-index: 4; /* Phải nằm trên cùng khi đóng */
-            transform-origin: top; /* Xoay từ cạnh trên */
-            transition: transform 0.6s ease-in-out, z-index 0.6s;
-            border-radius: 10px 10px 0 0;
-        }
-
-        /* Tem trái tim trên nắp thư */
-        .heart {
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 30px;
-            color: #ffd700; /* Màu vàng */
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        /* 5. Tờ giấy bên trong (Letter) */
+        /* 4. Tờ giấy bên trong (Letter) */
         .letter {
             position: absolute;
             top: 10px;
-            left: 15px;
-            width: 270px;
-            height: 180px;
-            background-color: #fff;
+            left: 50%;
+            transform: translateX(-50%); /* Căn giữa */
+            width: 260px;
+            height: 170px;
+            background-color: #fffdf0; /* Màu giấy cũ hơn chút */
             padding: 20px;
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1; /* Nằm bên trong bì thư */
-            transition: all 0.8s ease-in-out; /* Hiệu ứng mượt mà */
+            z-index: 1; /* Nằm dưới bì thư lúc đầu */
+            transition: all 0.8s ease-in-out;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            opacity: 0; /* Ẩn nội dung lúc đầu cho đẹp */
+            opacity: 0;
+            border: 1px solid #e0e0e0;
         }
 
-        /* Trang trí tờ giấy */
+        /* Trang trí nội dung tờ giấy */
         .letter h2 {
             margin: 0 0 10px 0;
             font-size: 18px;
-            color: #333;
+            color: #4a4a4a;
         }
         .letter p {
             font-size: 14px;
-            color: #555;
+            color: #666;
             line-height: 1.5;
         }
 
-        /* --- CÁC HIỆU ỨNG KHI MỞ THƯ (Class .open được thêm bằng JS) --- */
+        /* --- CÁC HIỆU ỨNG KHI MỞ THƯ (Responsive) --- */
         
-        /* Bước 1: Mở nắp thư */
-        .wrapper.open .flap {
-            transform: rotateX(180deg); /* Lật nắp lên */
-            z-index: 0; /* Đưa nắp xuống dưới lá thư */
-            transition-delay: 0s;
-        }
-
-        /* Bước 2: Tờ giấy trồi lên và phóng to */
+        /* Tờ giấy trồi lên và phóng to */
         .wrapper.open .letter {
             opacity: 1;
-            /* Di chuyển lên trên (Y: -100px) và phóng to (scale 1.2) */
-            transform: translateY(-150px) scale(1.2); 
-            z-index: 5; /* Đưa tờ giấy lên trên cùng */
-            transition-delay: 0.4s; /* Chờ nắp mở xong mới trồi lên */
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            /* Di chuyển lên và phóng to nhẹ */
+            transform: translate(-50%, -120px) scale(1.1); 
+            z-index: 3; /* Đưa tờ giấy lên trên cùng */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* 5. Responsive cho điện thoại di động */
+        @media (max-width: 600px) {
+            .wrapper {
+                width: 250px; /* Giảm kích thước thư trên mobile */
+                height: 166px;
+            }
+            .letter {
+                width: 220px;
+                height: 140px;
+                padding: 15px;
+            }
+            .letter h2 {
+                font-size: 16px;
+            }
+            .letter p {
+                font-size: 13px;
+            }
+            .wrapper.open .letter {
+                /* Di chuyển lên ít hơn và phóng to ít hơn trên mobile */
+                transform: translate(-50%, -100px) scale(1.05);
+            }
         }
 
     </style>
@@ -150,28 +117,22 @@
 <body>
 
     <div class="wrapper" onclick="openLetter()">
-        <div class="envelope">
-            <div class="flap">
-                <div class="heart">♥</div> </div>
+        <div class="envelope-image"></div>
             
-            <div class="letter">
-                <h2>Gửi người đặc biệt,</h2>
-                <p>
-                    Hôm nay là một ngày đẹp trời.<br>
-                    Mình chỉ muốn nhắn rằng:<br>
-                    <strong>"Bạn hãy luôn mỉm cười nhé!"</strong>
-                    <br><br>
-                    Chúc bạn một ngày vui vẻ!
-                </p>
-            </div>
+        <div class="letter">
+            <h2>Gửi bạn thân mến,</h2>
+            <p>
+                Bức thư này được gửi đến bạn với những lời chúc tốt đẹp nhất.<br>
+                <br>
+                Mong bạn luôn tìm thấy niềm vui trong những điều giản dị.
+            </p>
         </div>
     </div>
 
     <script>
         function openLetter() {
             const wrapper = document.querySelector('.wrapper');
-            // Thêm class 'open' vào wrapper để kích hoạt CSS animation
-            // Nếu đã mở rồi thì đóng lại (toggle)
+            // Toggle class 'open' để kích hoạt/hủy hiệu ứng
             wrapper.classList.toggle('open');
         }
     </script>
