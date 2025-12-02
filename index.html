@@ -6,35 +6,37 @@
     <title>Thư Gửi Bạn</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
+        /* --- CẤU HÌNH MÀU SẮC & KÍCH THƯỚC --- */
         :root {
-            --paper-color: #fffdf0; /* Màu giấy kem */
+            --bg-color: #eef2f7;    /* Màu nền trang web sáng sủa, hiện đại */
+            --envelope-main: #d4c4a8; /* Màu chính của bao thư (nâu giấy kraft nhạt) */
+            --envelope-shadow: #c0b093; /* Màu tối hơn để tạo khối */
+            --paper-color: #fffcf5; /* Màu giấy viết thư kem */
             --line-color: #a2a9b6;  /* Màu dòng kẻ xanh nhạt */
-            --line-height: 32px;    /* Khoảng cách dòng chuẩn */
-            --envelope-color: #d7c4a1; /* Màu bao thư Kraft */
-            --envelope-dark: #c0ad8d;
+            --line-height: 32px;    /* CHIỀU CAO DÒNG KẺ CHUẨN */
         }
 
         body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-family: 'Patrick Hand', cursive; /* Font chữ viết tay gọn gàng */
-            overflow: hidden;
+            font-family: 'Patrick Hand', cursive; /* Font chữ viết tay chính */
+            overflow: hidden; /* Ngăn cuộn trang bên ngoài */
         }
 
-        /* Lớp phủ mờ nền đen */
+        /* Lớp phủ mờ nền đen khi mở thư */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.5); /* Màu đen mờ nhẹ hơn */
             opacity: 0;
             visibility: hidden;
-            transition: 0.5s;
-            z-index: 99;
-            backdrop-filter: blur(2px); /* Làm mờ nhẹ hậu cảnh */
+            transition: all 0.6s ease-in-out;
+            z-index: 90;
+            backdrop-filter: blur(3px); /* Làm mờ hậu cảnh */
         }
         
         body.message-open .overlay { opacity: 1; visibility: visible; }
@@ -46,75 +48,61 @@
             height: 220px;
             cursor: pointer;
             z-index: 100;
+            /* Hiệu ứng nổi nhẹ khi di chuột vào */
+            transition: transform 0.3s ease;
         }
+        .wrapper:hover { transform: translateY(-5px); }
 
-        /* --- CẤU TẠO BAO THƯ (Màu Kraft cổ điển) --- */
+        /* --- CẤU TẠO BAO THƯ (Tối giản & Tinh tế) --- */
         .envelope {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--envelope-color);
-            border-radius: 6px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            background-color: var(--envelope-main);
+            border-radius: 8px;
+            /* Đổ bóng mềm mại hơn, tạo độ sâu */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             z-index: 2;
         }
 
-        /* Tam giác đáy */
+        /* Tam giác đáy (Phần thân chính) */
         .envelope::before {
             content: ''; position: absolute; bottom: 0; left: 0;
             border-style: solid; border-width: 0 160px 130px 160px;
-            border-color: transparent transparent #e6d3b3 transparent; /* Màu sáng hơn chút */
+            border-color: transparent transparent var(--envelope-main) transparent;
             z-index: 4;
+            filter: drop-shadow(0 -2px 3px rgba(0,0,0,0.05)); /* Bóng nhẹ ngăn cách các lớp */
         }
 
-        /* Hai cánh bên */
+        /* Hai cánh bên (Tạo khối) */
         .envelope::after {
             content: ''; position: absolute; top: 0; left: 0;
             border-style: solid; border-width: 110px 160px 110px 160px;
-            border-color: transparent var(--envelope-dark) transparent var(--envelope-dark);
+            /* Dùng màu tối hơn chút để tạo hiệu ứng lớp xếp chồng */
+            border-color: transparent var(--envelope-shadow) transparent var(--envelope-shadow);
             z-index: 3;
         }
 
-        /* Nắp thư */
+        /* Nắp thư (Flap) */
         .flap {
             position: absolute; top: 0; left: 0;
             border-style: solid; border-width: 120px 160px 0 160px;
-            border-color: var(--envelope-color) transparent transparent transparent;
+            border-color: var(--envelope-main) transparent transparent transparent;
             z-index: 5;
             transform-origin: top;
-            transition: transform 0.6s 0.2s, z-index 0.4s;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            /* Chuyển động mở nắp mượt mà */
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.6s;
+            /* Bóng đổ của nắp thư lên thân thư */
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
         }
 
-        /* Con dấu sáp (Wax Seal) */
-        .seal {
-            position: absolute; bottom: 100%; left: 50%;
-            transform: translate(-50%, 65px);
-            width: 45px; height: 45px;
-            background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
-            border-radius: 50%;
-            color: rgba(255,255,255,0.8); 
-            font-size: 24px;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 -2px 5px rgba(0,0,0,0.2);
-            z-index: 6;
-            border: 2px dashed rgba(0,0,0,0.1); /* Tạo viền răng cưa giả */
-        }
-
-        /* Trang trí dây leo */
-        .vine {
-            position: absolute; bottom: -20px; left: -25px;
-            width: 160px; z-index: 10;
-            pointer-events: none;
-            filter: drop-shadow(3px 5px 5px rgba(0,0,0,0.15));
-        }
-
-        /* --- TỜ GIẤY & DÒNG KẺ (Quan trọng) --- */
+        /* --- TỜ GIẤY & DÒNG KẺ (Trọng tâm) --- */
         .letter {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.4);
-            width: 90%; height: 90%;
+            /* Ban đầu nhỏ, ẩn, và hơi xoay nhẹ */
+            transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
+            width: 85%; height: 85%;
             
-            /* Tạo nền giấy có dòng kẻ */
+            /* Tạo nền giấy có dòng kẻ bằng CSS Gradient */
             background-color: var(--paper-color);
             background-image: repeating-linear-gradient(
                 var(--paper-color),
@@ -123,95 +111,106 @@
                 var(--line-color) var(--line-height)
             );
             
-            padding: 0; /* Reset padding để tính toán dòng cho chuẩn */
-            border-radius: 5px;
+            border-radius: 4px;
             opacity: 0;
             z-index: 1;
-            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            /* Hiệu ứng chuyển động bay ra mượt mà, chậm rãi (0.8s) */
+            transition: all 0.8s cubic-bezier(0.34, 1.2, 0.64, 1); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             overflow: hidden;
             display: flex; 
             flex-direction: column;
-            border: 1px solid #dcdcdc;
+            border: 1px solid #e0e0e0;
         }
 
         /* Nội dung bên trong giấy */
         .paper-content {
             width: 100%;
             height: 100%;
-            padding: 0 20px; /* Khoảng cách lề trái phải */
+            padding: 0 25px; /* Lề 2 bên rộng hơn chút cho thoáng */
             box-sizing: border-box;
             overflow-y: auto; /* Cho phép cuộn */
+            /* Ẩn thanh cuộn nhưng vẫn cuộn được (cho đẹp) */
+            scrollbar-width: none; 
         }
+        .paper-content::-webkit-scrollbar { display: none; }
 
-        /* Tiêu đề thư */
+        /* Tiêu đề thư (Font bay bổng) */
         .paper-content h1 {
             font-family: 'Dancing Script', cursive;
-            color: #b71c1c;
-            font-size: 32px;
+            color: #8d6e63; /* Màu nâu tây sang trọng */
+            font-size: 34px;
             margin: 0;
-            
-            /* Căn chỉnh tiêu đề chiếm đúng 2 dòng kẻ để không lệch dòng dưới */
+            /* Chiếm đúng 2 dòng kẻ */
             height: calc(var(--line-height) * 2); 
             line-height: calc(var(--line-height) * 2);
             text-align: center;
+            font-weight: 700;
         }
 
-        /* Đoạn văn bản chính - CĂN DÒNG CHUẨN */
+        /* Đoạn văn bản chính (CĂN DÒNG CHUẨN) */
         .paper-content p {
-            font-size: 20px; /* Kích thước chữ vừa vặn với dòng 32px */
-            color: #444;
+            font-size: 21px; /* Kích thước chữ tối ưu cho dòng 32px */
+            color: #555;
             margin: 0;
-            
-            /* Bí mật nằm ở đây: Line-height bằng đúng kích thước dòng kẻ nền */
+            /* Line-height bằng đúng kích thước dòng kẻ nền */
             line-height: var(--line-height); 
-            text-align: justify; /* Căn đều 2 bên cho đẹp */
+            text-align: justify;
         }
         
-        /* Hiệu ứng Mở Thư -> Phóng to */
+        /* --- TRẠNG THÁI KHI MỞ THƯ --- */
+        
+        /* 1. Mở nắp */
+        .wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Đưa nắp xuống dưới giấy */
+        }
+
+        /* 2. Giấy bay ra và phóng to */
         .wrapper.open .letter {
-            position: fixed;
+            position: fixed; /* Chuyển sang cố định màn hình */
             top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(1);
+            /* Về vị trí chính giữa, không xoay nữa, kích thước chuẩn */
+            transform: translate(-50%, -50%) scale(1) rotate(0deg);
             
             /* Kích thước khi mở ra */
             width: 90vw; 
-            max-width: 500px;
-            height: 80vh; /* Cao 80% màn hình */
+            max-width: 550px; /* Rộng hơn chút trên PC */
+            height: 80vh;
             
             z-index: 1000;
             opacity: 1;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            /* Bóng đổ lớn tạo cảm giác nổi hẳn lên trên nền tối */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             
-            /* Thêm lề trên để chữ bắt đầu đúng dòng đầu tiên */
+            /* Lề trên để bắt đầu đúng dòng kẻ */
             padding-top: var(--line-height); 
         }
 
         /* Nút đóng thư */
         .close-btn {
             display: block;
-            margin: calc(var(--line-height) * 1) auto; /* Cách trên dưới 1 dòng */
-            padding: 5px 20px;
-            background: #b71c1c;
+            margin: calc(var(--line-height) * 1.5) auto; /* Cách trên dưới 1.5 dòng */
+            padding: 8px 30px;
+            background-color: #8d6e63;
             color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 50px; /* Nút tròn mềm mại */
             font-family: 'Patrick Hand', cursive;
             font-size: 18px;
             cursor: pointer;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-            opacity: 0; /* Ẩn nút lúc đầu */
-            transition: opacity 0.5s 0.5s; /* Hiện chậm hơn giấy */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            /* Hiện nút chậm hơn giấy một chút */
+            transition: opacity 0.5s 0.6s, transform 0.2s, background-color 0.3s;
+        }
+        
+        .close-btn:hover {
+            background-color: #6d4c41;
+            transform: scale(1.05); /* Phóng to nhẹ khi di chuột */
         }
         
         .wrapper.open .close-btn { opacity: 1; }
-
-        /* Animation mở nắp */
-        .wrapper.open .flap {
-            transform: rotateX(180deg);
-            z-index: 1;
-        }
-        .wrapper.open .seal { opacity: 0; transition: 0.2s; }
 
     </style>
 </head>
@@ -220,26 +219,18 @@
     <div class="overlay" onclick="closeLetter(event)"></div>
 
     <div class="wrapper" id="envelopeWrapper" onclick="openLetter()">
-        <svg class="vine" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10,100 Q40,50 10,10" stroke="#6d4c41" stroke-width="3"/>
-            <path d="M10,25 Q30,20 40,30 Q30,40 10,25" fill="#a5d6a7"/>
-            <path d="M25,55 Q45,50 50,60 Q45,70 25,55" fill="#81c784"/>
-            <path d="M10,80 Q35,75 40,85 Q35,95 10,80" fill="#66bb6a"/>
-        </svg>
-
         <div class="envelope"></div>
-        <div class="flap">
-            <div class="seal">❤</div> </div>
+        <div class="flap"></div>
 
         <div class="letter">
             <div class="paper-content">
                 <h1>Thư Gửi Người Thương</h1>
                 
                 <p>
-                    Chào bạn, một ngày thật đẹp trời nhỉ!<br>
-                    Mình viết những dòng này trên trang giấy kẻ ngang, để mọi thứ thật ngay ngắn và chỉn chu gửi đến bạn.<br>
-                    Mong rằng nụ cười của bạn sẽ luôn rạng rỡ, mọi muộn phiền sẽ tan biến như mây trời.<br>
-                    Chúc bạn có thật nhiều niềm vui và những điều may mắn bất ngờ trong ngày hôm nay nhé!<br>
+                    Chào bạn, một ngày thật bình yên nhé!<br>
+                    Tôi viết những dòng này khi ngoài kia nắng đang lên rất đẹp. Không có hoa lá cầu kỳ, chỉ có tấm chân tình gửi gắm trên trang giấy mộc mạc này.<br>
+                    Mong rằng dù cuộc sống có bộn bề đến đâu, bạn vẫn luôn giữ được sự an yên trong tâm hồn và nụ cười trên môi.<br>
+                    Hãy nhớ rằng, bạn luôn xứng đáng với những điều tốt đẹp nhất.<br>
                     <br>
                     Thân mến,<br>
                     Người bạn phương xa.
@@ -251,6 +242,7 @@
     </div>
 
     <script>
+        // Giữ nguyên logic Javascript vì đã hoạt động tốt
         function openLetter() {
             const wrapper = document.getElementById('envelopeWrapper');
             const body = document.body;
